@@ -28,9 +28,9 @@ type Branch struct {
 func (repository *Repository) Init(repositoryName string) {
 	repository.Name = repositoryName
 	repository.Commits = []Commit{}
-	masterBranch := Branch{Name: "master", Commit: Commit{}}
-	repository.Branches = append(repository.Branches, masterBranch)
-	repository.Head = masterBranch.Commit
+	mainBranch := Branch{Name: "main", Commit: Commit{}}
+	repository.Branches = append(repository.Branches, mainBranch)
+	repository.Head = mainBranch.Commit
 }
 
 func (repository *Repository) Commit(message string) {
@@ -39,6 +39,8 @@ func (repository *Repository) Commit(message string) {
 	newCommit := Commit{Id: id, Message: message, Date: date}
 	repository.Commits = append(repository.Commits, newCommit)
 	repository.Head = newCommit
+
+	fmt.Printf("Commit %s created at %s\n", id, date)
 }
 
 func (repository *Repository) Log() {
@@ -87,10 +89,10 @@ func (repository *Repository) Checkout(branchName string) {
 
 func (repository *Repository) PrintBranches() {
 	for _, branch := range repository.Branches {
-		fmt.Printf("%s\n", branch.Name)
+		fmt.Printf("branch: %s\n", branch.Name)
 	}
 }
 
 func (repository *Repository) PrintHead() {
-	fmt.Printf("%s\n", repository.Head.Message)
+	fmt.Printf("head: %s\n", repository.Head.Message)
 }
