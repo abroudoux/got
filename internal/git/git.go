@@ -72,6 +72,7 @@ func reverseCommitsOrder(commits []Commit) ([]Commit, error) {
 func (repository *Repository) Branch(branchName string) {
 	branch := Branch{Name: branchName, Commit: repository.Head}
 	repository.Branches = append(repository.Branches, branch)
+
 	fmt.Printf("Branch %s created at commit %s\n", branch.Name, branch.Commit.Id)
 }
 
@@ -87,12 +88,21 @@ func (repository *Repository) Checkout(branchName string) {
 	fmt.Printf("Branch %s not found\n", branchName)
 }
 
-func (repository *Repository) PrintBranches() {
+func (repository *Repository) printBranches() {
 	for _, branch := range repository.Branches {
-		fmt.Printf("branch: %s\n", branch.Name)
+		fmt.Printf("%s\n", branch.Name)
 	}
 }
 
-func (repository *Repository) PrintHead() {
-	fmt.Printf("head: %s\n", repository.Head.Message)
+func (repository *Repository) printHead() {
+	fmt.Printf("%s\n", repository.Head.Message)
+}
+
+func (repository *Repository) Debug() {
+	println("Commits")
+	repository.Log()
+	println("Branches")
+	repository.printBranches()
+	println("Head")
+	repository.printHead()
 }
