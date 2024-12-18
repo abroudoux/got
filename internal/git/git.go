@@ -10,7 +10,7 @@ import (
 type Repository struct {
 	Name string
 	Commits []Commit
-	Head Head
+	Head Commit
 	Branches []Branch
 }
 
@@ -18,10 +18,6 @@ type Commit struct {
 	Id string
 	Message string
 	Date string
-}
-
-type Head struct {
-	Commit Commit
 }
 
 type Branch struct {
@@ -34,7 +30,7 @@ func (repository *Repository) Init(repositoryName string) {
 	repository.Commits = []Commit{}
 	masterBranch := Branch{Name: "master", Commit: Commit{}}
 	repository.Branches = append(repository.Branches, masterBranch)
-	repository.Head = Head{Commit: Commit{}}
+	repository.Head = masterBranch.Commit
 }
 
 func (repository *Repository) Commit(message string) {
@@ -42,7 +38,7 @@ func (repository *Repository) Commit(message string) {
 	date := time.Now().Format("2006-01-02 15:04:05")
 	newCommit := Commit{Id: id, Message: message, Date: date}
 	repository.Commits = append(repository.Commits, newCommit)
-	repository.Head.Commit = newCommit
+	repository.Head = newCommit
 }
 
 func (repository *Repository) Log() {
@@ -72,6 +68,29 @@ func reverseCommitsOrder(commits []Commit) ([]Commit, error) {
 }
 
 func (repository *Repository) Branch(branchName string) {
-	branch := Branch{Name: branchName, Commit: repository.Head.Commit}
+	branch := Branch{Name: branchName, Commit: repository.Head}
+	repository.Branches = append(repository.Branches, branch)
 	fmt.Printf("Branch %s created at commit %s\n", branch.Name, branch.Commit.Id)
+}
+
+func (repository *Repository) Checkout(branchName string) {
+	for _, branch := range repository.Branches {
+		if branch.Name == branchName {
+			repository.Head = branch.Commit
+			fmt.Printf("Switched to branch %s\n", branchName)
+			return
+		}
+	}
+
+	fmt.Printf("Branch %s not found\n", branchName)
+}
+
+func (repository *Repository) PrintBranches() {
+	for _, branch := range repository.Branches {
+		fmt.Printf("%s\n", branch.Name)
+	}
+}
+
+func (repository *Repository) PrintHead() {
+	fmt.Printf("%s\n", repository.Head.Message)
 }
