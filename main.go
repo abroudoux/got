@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 )
 
@@ -36,11 +38,30 @@ func (repository *Repository) Commit(message string) {
 
 func (repository *Repository) Log() {
 	if len(repository.Commits) == 0 {
-		println("No commits yet")
+		fmt.Println("No commits yet")
 		return
 	}
 
-	for _, commit := range repository.Commits {
-		println(commit.Message)
+	reversedCommits, err := reverseCommitsOrder(repository.Commits)
+	if err != nil {
+		fmt.Println("Error reversing commits order")
+		return
+	}
+
+	for _, commit := range reversedCommits {
+		fmt.Printf("%s: %s \n", commit.Id, commit.Message)
+	}
+
+	for _, commit := range reversedCommits {
+		fmt.Printf("%s: %s \n", commit.Id, commit.Message)
 	}
 }
+
+func reverseCommitsOrder(commits []Commit) ([]Commit, error) {
+	var reversedCommits []Commit
+	for i := len(commits) - 1; i >= 0; i-- {
+		reversedCommits = append(reversedCommits, commits[i])
+	}
+
+	return reversedCommits, nil
+}  
