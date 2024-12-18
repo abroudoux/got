@@ -6,7 +6,7 @@ type Repository = git.Repository
 
 func main() {
 	var repository Repository = Repository{}
-	repository.InitRepository("my-repo")
+	repository.Init("my-repo")
 	repository.Commit("Initial commit")
 	repository.Commit("Second commit")
 	repository.Log()

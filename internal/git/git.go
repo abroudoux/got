@@ -2,6 +2,7 @@ package git
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -10,22 +11,34 @@ type Repository struct {
 	Name string
 	Commits []Commit
 	Head Commit
+	Branches []Branch
 }
 
 type Commit struct {
 	Id string
 	Message string
+	Date string
 }
 
-func (repository *Repository) InitRepository(repositoryName string) {
+type Branch struct {
+	Name string
+	Commit Commit
+}
+
+func (repository *Repository) Init(repositoryName string) {
 	repository.Name = repositoryName
+	repository.Commits = []Commit{}
+	masterBranch := Branch{Name: "master", Commit: Commit{}}
+	repository.Branches = append(repository.Branches, masterBranch)
+	repository.Head = masterBranch.Commit
 }
 
 func (repository *Repository) Commit(message string) {
 	id := uuid.New().String()
-	commit := Commit{Id: id, Message: message}
-	repository.Commits = append(repository.Commits, commit)
-	repository.Head = commit
+	date := time.Now().Format("2006-01-02 15:04:05")
+	newCommit := Commit{Id: id, Message: message, Date: date}
+	repository.Commits = append(repository.Commits, newCommit)
+	repository.Head = newCommit
 }
 
 func (repository *Repository) Log() {
@@ -41,11 +54,7 @@ func (repository *Repository) Log() {
 	}
 
 	for _, commit := range reversedCommits {
-		fmt.Printf("%s: %s \n", commit.Id, commit.Message)
-	}
-
-	for _, commit := range reversedCommits {
-		fmt.Printf("%s: %s \n", commit.Id, commit.Message)
+		fmt.Printf("%s: %s -- %s \n", commit.Id, commit.Message, commit.Date)
 	}
 }
 
@@ -56,4 +65,9 @@ func reverseCommitsOrder(commits []Commit) ([]Commit, error) {
 	}
 
 	return reversedCommits, nil
+}
+
+func (repository *Repository) Branch(branchName string) {
+	branch := Branch{Name: branchName, Commit: repository.Head}
+	fmt.Printf("Branch %s created at commit %s\n", branch.Name, branch.Commit.Id)
 }
