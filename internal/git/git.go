@@ -10,7 +10,7 @@ import (
 type Repository struct {
 	Name string
 	Commits []Commit
-	Head Commit
+	Head Head
 	Branches []Branch
 }
 
@@ -18,6 +18,10 @@ type Commit struct {
 	Id string
 	Message string
 	Date string
+}
+
+type Head struct {
+	Commit Commit
 }
 
 type Branch struct {
@@ -30,7 +34,7 @@ func (repository *Repository) Init(repositoryName string) {
 	repository.Commits = []Commit{}
 	masterBranch := Branch{Name: "master", Commit: Commit{}}
 	repository.Branches = append(repository.Branches, masterBranch)
-	repository.Head = masterBranch.Commit
+	repository.Head = Head{Commit: Commit{}}
 }
 
 func (repository *Repository) Commit(message string) {
@@ -38,7 +42,7 @@ func (repository *Repository) Commit(message string) {
 	date := time.Now().Format("2006-01-02 15:04:05")
 	newCommit := Commit{Id: id, Message: message, Date: date}
 	repository.Commits = append(repository.Commits, newCommit)
-	repository.Head = newCommit
+	repository.Head.Commit = newCommit
 }
 
 func (repository *Repository) Log() {
@@ -68,6 +72,6 @@ func reverseCommitsOrder(commits []Commit) ([]Commit, error) {
 }
 
 func (repository *Repository) Branch(branchName string) {
-	branch := Branch{Name: branchName, Commit: repository.Head}
+	branch := Branch{Name: branchName, Commit: repository.Head.Commit}
 	fmt.Printf("Branch %s created at commit %s\n", branch.Name, branch.Commit.Id)
 }
