@@ -7,25 +7,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type Repository struct {
-	Name string
-	Head Commit
-	Branches []*Branch
-	ActiveBranch *Branch
-}
-
-type Commit struct {
-	Id string
-	Message string
-	Date string
-}
-
-type Branch struct {
-	Name string
-	Commits []Commit
-	LastCommit Commit
-}
-
 func (repository *Repository) Init(repositoryName string) {
 	repository.Name = repositoryName
 	mainBranch := &Branch{Name: "main", Commits: []Commit{}, LastCommit: Commit{}}
@@ -112,39 +93,4 @@ func reverseCommitsOrder(commits []Commit) ([]Commit, error) {
 	}
 
 	return reversedCommits, nil
-}
-
-func (repository *Repository) printBranches() {
-	for _, branch := range repository.Branches {
-		fmt.Printf("%s\n", branch.Name)
-	}
-}
-
-func (repository *Repository) printHead() {
-	if repository.Head.Id == "" {
-		fmt.Println("No commits yet")
-		return
-	}
-
-	fmt.Printf("%s\n", repository.Head.Message)
-}
-
-func (repository *Repository) printActiveBranch() {
-	if repository.ActiveBranch.Name == "" {
-		fmt.Println("No active branch")
-		return
-	}
-
-	fmt.Printf("%s\n", repository.ActiveBranch.Name)
-}
-
-func (repository *Repository) Debug() {
-	println("COMMITS")
-	repository.Log()
-	println("BRANCHES")
-	repository.printBranches()
-	println("ACTIVE BRANCH")
-	repository.printActiveBranch()
-	println("HEAD")
-	repository.printHead()
 }
