@@ -25,4 +25,7 @@ func main() {
 	println("--------------------------------")
 	repository.Checkout("main")
 	repository.Debug()
+	println("--------------------------------")
+	repository.Merge("branch-1")
+	repository.Debug()
 }
