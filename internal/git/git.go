@@ -9,9 +9,9 @@ import (
 
 type Repository struct {
 	Name string
-	Commits []Commit
 	Head Commit
 	Branches []Branch
+	ActiveBranch Branch
 }
 
 type Commit struct {
@@ -22,34 +22,44 @@ type Commit struct {
 
 type Branch struct {
 	Name string
-	Commit Commit
+	Commits []Commit
+	LastCommit Commit
 }
 
 func (repository *Repository) Init(repositoryName string) {
 	repository.Name = repositoryName
-	repository.Commits = []Commit{}
-	mainBranch := Branch{Name: "main", Commit: Commit{}}
+	mainBranch := Branch{Name: "main", Commits: []Commit{}, LastCommit: Commit{}}
 	repository.Branches = append(repository.Branches, mainBranch)
-	repository.Head = mainBranch.Commit
+	repository.ActiveBranch = mainBranch
+	repository.Head = repository.ActiveBranch.LastCommit
 }
 
 func (repository *Repository) Commit(message string) {
 	id := uuid.New().String()
 	date := time.Now().Format("2006-01-02 15:04:05")
 	newCommit := Commit{Id: id, Message: message, Date: date}
-	repository.Commits = append(repository.Commits, newCommit)
-	repository.Head = newCommit
+
+	repository.ActiveBranch.Commits = append(repository.ActiveBranch.Commits, newCommit)
+	repository.ActiveBranch.LastCommit = newCommit
+	repository.Head = repository.ActiveBranch.LastCommit
+
+	for i, branch := range repository.Branches {
+		if branch.Name == repository.ActiveBranch.Name {
+			repository.Branches[i] = repository.ActiveBranch
+			break
+		}
+	}
 
 	fmt.Printf("Commit %s created at %s\n", id, date)
 }
 
 func (repository *Repository) Log() {
-	if len(repository.Commits) == 0 {
+	if len(repository.ActiveBranch.Commits) == 0 {
 		fmt.Println("No commits yet")
 		return
 	}
 
-	reversedCommits, err := reverseCommitsOrder(repository.Commits)
+	reversedCommits, err := reverseCommitsOrder(repository.ActiveBranch.Commits)
 	if err != nil {
 		fmt.Println("Error reversing commits order")
 		return
@@ -70,16 +80,21 @@ func reverseCommitsOrder(commits []Commit) ([]Commit, error) {
 }
 
 func (repository *Repository) Branch(branchName string) {
-	branch := Branch{Name: branchName, Commit: repository.Head}
+	branch := Branch{
+		Name:     branchName,
+		Commits:  append([]Commit{}, repository.ActiveBranch.Commits...),
+		LastCommit: repository.Head,
+	}
 	repository.Branches = append(repository.Branches, branch)
 
-	fmt.Printf("Branch %s created at commit %s\n", branch.Name, branch.Commit.Id)
+	fmt.Printf("Branch %s created at commit %s\n", branch.Name, branch.LastCommit.Id)
 }
 
 func (repository *Repository) Checkout(branchName string) {
 	for _, branch := range repository.Branches {
 		if branch.Name == branchName {
-			repository.Head = branch.Commit
+			repository.ActiveBranch = branch
+			repository.Head = branch.LastCommit
 			fmt.Printf("Switched to branch %s\n", branchName)
 			return
 		}
@@ -95,14 +110,30 @@ func (repository *Repository) printBranches() {
 }
 
 func (repository *Repository) printHead() {
+	if repository.Head.Id == "" {
+		fmt.Println("No commits yet")
+		return
+	}
+
 	fmt.Printf("%s\n", repository.Head.Message)
 }
 
+func (repository *Repository) printActiveBranch() {
+	if repository.ActiveBranch.Name == "" {
+		fmt.Println("No active branch")
+		return
+	}
+
+	fmt.Printf("%s\n", repository.ActiveBranch.Name)
+}
+
 func (repository *Repository) Debug() {
-	println("Commits")
+	println("COMMITS")
 	repository.Log()
-	println("Branches")
+	println("BRANCHES")
 	repository.printBranches()
-	println("Head")
+	println("ACTIVE BRANCH")
+	repository.printActiveBranch()
+	println("HEAD")
 	repository.printHead()
 }
