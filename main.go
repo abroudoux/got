@@ -25,10 +25,4 @@ func main() {
 	println("--------------------------------")
 	repository.Checkout("main")
 	repository.Debug()
-	println("--------------------------------")
-	repository.Checkout("branch-1")
-	repository.Debug()
-	println("--------------------------------")
-	repository.Checkout("main")
-	repository.Debug()
 }
