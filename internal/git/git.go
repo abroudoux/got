@@ -9,7 +9,7 @@ import (
 
 func (repository *Repository) Init(repositoryName string) {
 	repository.Name = repositoryName
-	mainBranch := &Branch{Name: "main", Commits: []Commit{}, LastCommit: Commit{}}
+	mainBranch := &Branch{Name: "main", Commits: []*Commit{}, LastCommit: nil}
 	repository.Branches = append(repository.Branches, mainBranch)
 	repository.ActiveBranch = mainBranch
 	repository.Head = repository.ActiveBranch.LastCommit
@@ -18,7 +18,7 @@ func (repository *Repository) Init(repositoryName string) {
 func (repository *Repository) Commit(message string) {
 	id := uuid.New().String()
 	date := time.Now().Format("2006-01-02 15:04:05")
-	newCommit := Commit{Id: id, Message: message, Date: date}
+	newCommit := &Commit{Id: id, Message: message, Date: date}
 	repository.ActiveBranch.Commits = append(repository.ActiveBranch.Commits, newCommit)
 	repository.ActiveBranch.LastCommit = newCommit
 	repository.Head = repository.ActiveBranch.LastCommit
@@ -45,8 +45,8 @@ func (repository *Repository) Log() {
 
 func (repository *Repository) Branch(branchName string) {
 	branch := &Branch{
-		Name:     branchName,
-		Commits:  append([]Commit{}, repository.ActiveBranch.Commits...),
+		Name:       branchName,
+		Commits:    append([]*Commit{}, repository.ActiveBranch.Commits...),
 		LastCommit: repository.Head,
 	}
 	repository.Branches = append(repository.Branches, branch)
@@ -75,7 +75,18 @@ func (repository *Repository) Merge(branchName string) {
 
 	for _, branch := range repository.Branches {
 		if branch.Name == branchName {
-			repository.ActiveBranch.Commits = append(repository.ActiveBranch.Commits, branch.Commits...)
+			existingCommits := make(map[*Commit]bool)
+			for _, commit := range repository.ActiveBranch.Commits {
+				existingCommits[commit] = true
+			}
+
+			for _, commit := range branch.Commits {
+				if !existingCommits[commit] {
+					repository.ActiveBranch.Commits = append(repository.ActiveBranch.Commits, commit)
+					existingCommits[commit] = true
+				}
+			}
+
 			repository.ActiveBranch.LastCommit = branch.LastCommit
 			repository.Head = branch.LastCommit
 			fmt.Printf("Branch %s merged\n", branchName)
@@ -86,11 +97,10 @@ func (repository *Repository) Merge(branchName string) {
 	fmt.Printf("Branch %s not found\n", branchName)
 }
 
-func reverseCommitsOrder(commits []Commit) ([]Commit, error) {
-	var reversedCommits []Commit
-	for i := len(commits) - 1; i >= 0; i-- {
-		reversedCommits = append(reversedCommits, commits[i])
-	}
-
-	return reversedCommits, nil
+func reverseCommitsOrder(commits []*Commit) ([]*Commit, error) {
+    var reversedCommits []*Commit
+    for i := len(commits) - 1; i >= 0; i-- {
+        reversedCommits = append(reversedCommits, commits[i])
+    }
+    return reversedCommits, nil
 }

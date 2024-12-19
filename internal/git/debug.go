@@ -11,12 +11,11 @@ func (repository *Repository) printBranches() {
 }
 
 func (repository *Repository) printHead() {
-	if repository.Head.Id == "" {
-		fmt.Println("No commits yet")
-		return
-	}
-
-	fmt.Printf("%s\n", repository.Head.Message)
+    if repository.Head == nil {
+        fmt.Println("Head: nil")
+    } else {
+        fmt.Printf("Head: %s (%s)\n", repository.Head.Message, repository.Head.Date)
+    }
 }
 
 func (repository *Repository) printActiveBranch() {

@@ -2,7 +2,7 @@ package git
 
 type Repository struct {
 	Name string
-	Head Commit
+	Head *Commit
 	Branches []*Branch
 	ActiveBranch *Branch
 }
@@ -15,6 +15,6 @@ type Commit struct {
 
 type Branch struct {
 	Name string
-	Commits []Commit
-	LastCommit Commit
+	Commits []*Commit
+	LastCommit *Commit
 }
