@@ -96,3 +96,19 @@ func (repository *Repository) Merge(branchName string) {
 
 	fmt.Printf("Branch %s not found\n", branchName)
 }
+
+func (remoteRepository *RemoteRepository) CreateRemoteRepository(repositoryName string) {
+	remoteRepository.Repository = Repository{Name: repositoryName}
+	remoteRepository.Url = fmt.Sprintf("https://gothub.com/%s", remoteRepository.Repository.Name)
+
+	fmt.Sprintf("Remote repository %s created at %s", remoteRepository.Repository.Name, remoteRepository.Url)
+}
+
+func (repository *Repository) RemoteAdd(remoteRepository RemoteRepository) {
+	repository.Origin = &remoteRepository
+}
+
+func (repository *Repository) Push() {
+	repository.Origin.Repository.Branches = append(repository.Origin.Repository.Branches, repository.ActiveBranch)
+	fmt.Printf("Pushed to %s\n", repository.Origin.Url)
+}

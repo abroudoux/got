@@ -5,6 +5,7 @@ import (
 )
 
 type Repository = git.Repository
+type RemoteRepository = git.RemoteRepository
 
 func main() {
 	var repository Repository = Repository{}
@@ -28,4 +29,14 @@ func main() {
 	println("--------------------------------")
 	repository.Merge("branch-1")
 	repository.Debug()
+	println("--------------------------------")
+	var remoteRepository RemoteRepository = RemoteRepository{}
+	remoteRepository.CreateRemoteRepository("my-remote-repo")
+	println("--------------------------------")
+	repository.RemoteAdd(remoteRepository)
+	repository.Debug()
+	println("--------------------------------")
+	repository.Push()
+	repository.Debug()
+	remoteRepository.Debug()
 }

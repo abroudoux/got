@@ -5,6 +5,12 @@ type Repository struct {
 	Head *Commit
 	Branches []*Branch
 	ActiveBranch *Branch
+	Origin *RemoteRepository
+}
+
+type RemoteRepository struct {
+	Repository
+	Url string
 }
 
 type Commit struct {
