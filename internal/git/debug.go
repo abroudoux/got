@@ -4,6 +4,10 @@ import (
 	"fmt"
 )
 
+func (repository *Repository) printName() {
+	fmt.Printf("%s\n", repository.Name)
+}
+
 func (repository *Repository) printBranches() {
 	for _, branch := range repository.Branches {
 		fmt.Printf("%s\n", branch.Name)
@@ -33,7 +37,7 @@ func (repository *Repository) printOrigin() {
 		return
 	}
 
-	fmt.Printf("%s\n", repository.Origin.Name)
+	fmt.Printf("%s\n", repository.Origin.Repository.Name)
 }
 
 func (repository *Repository) Debug() {
@@ -52,6 +56,10 @@ func (repository *Repository) Debug() {
 	repository.printOrigin()
 }
 
+func (remoteRepository *RemoteRepository) printName() {
+	fmt.Printf("%s\n", remoteRepository.Name)
+}
+
 func (remoteRepository *RemoteRepository) printCommits() {
 	if (remoteRepository.Repository.ActiveBranch == nil) {
 		fmt.Println("No commits yet")
@@ -64,6 +72,11 @@ func (remoteRepository *RemoteRepository) printCommits() {
 }
 
 func (remoteRepository *RemoteRepository) printBranches() {
+	if (remoteRepository.Repository.Branches == nil) {
+		fmt.Println("No branches yet")
+		return
+	}
+
 	for _, branch := range remoteRepository.Repository.Branches {
 		fmt.Printf("%s\n", branch.Name)
 	}

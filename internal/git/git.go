@@ -98,17 +98,28 @@ func (repository *Repository) Merge(branchName string) {
 }
 
 func (remoteRepository *RemoteRepository) CreateRemoteRepository(repositoryName string) {
-	remoteRepository.Repository = Repository{Name: repositoryName}
-	remoteRepository.Url = fmt.Sprintf("https://gothub.com/%s", remoteRepository.Repository.Name)
+    remoteRepository.Name = repositoryName
+    remoteRepository.Url = fmt.Sprintf("https://gothub.com/%s", remoteRepository.Name)
+	remoteRepository.Repository = &Repository{}
 
-	fmt.Sprintf("Remote repository %s created at %s", remoteRepository.Repository.Name, remoteRepository.Url)
+    fmt.Printf("Remote repository %s created at %s\n", remoteRepository.Name, remoteRepository.Url)
 }
-
-func (repository *Repository) RemoteAdd(remoteRepository RemoteRepository) {
-	repository.Origin = &remoteRepository
+func (repository *Repository) RemoteAdd(remoteRepository *RemoteRepository) {
+    repository.Origin = remoteRepository
+    remoteRepository.Repository = repository
+    fmt.Printf("Remote %s added\n", remoteRepository.Url)
 }
 
 func (repository *Repository) Push() {
-	repository.Origin.Repository.Branches = append(repository.Origin.Repository.Branches, repository.ActiveBranch)
-	fmt.Printf("Pushed to %s\n", repository.Origin.Url)
+    if repository.Origin == nil {
+        fmt.Println("No remote repository to push to.")
+        return
+    }
+
+    if repository.ActiveBranch != nil {
+        repository.Origin.Repository.Branches = append(repository.Origin.Repository.Branches, repository.ActiveBranch)
+        fmt.Printf("Pushed branch %s to %s\n", repository.ActiveBranch.Name, repository.Origin.Url)
+    } else {
+        fmt.Println("No active branch to push.")
+    }
 }
