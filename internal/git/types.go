@@ -25,3 +25,17 @@ type Branch struct {
 	Commits []*Commit
 	LastCommit *Commit
 }
+
+type repository interface {
+	Init(repositoryName string)
+	Commit(message string)
+	Log()
+	Branch(branchName string)
+	Checkout(branchName string)
+	Merge(branchName string)
+	RemoteAdd(remoteRepository *RemoteRepository)
+}
+
+type remoteRepository interface {
+	CreateRemoteRepository(repositoryName string)
+}

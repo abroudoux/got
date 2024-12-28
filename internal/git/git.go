@@ -122,4 +122,6 @@ func (repository *Repository) Push() {
     } else {
         fmt.Println("No active branch to push.")
     }
+
+	println("Pushed to remote")
 }
