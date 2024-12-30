@@ -31,6 +31,7 @@ func (repository *Repository) LogBranches() {
 }
 
 func (repository *Repository) Commit(message string) {
+	time.Sleep(1 * time.Second) 
 	id := uuid.New().String()
 	date := time.Now().Format("2006-01-02 15:04:05")
 	newCommit := &Commit{Id: id, Message: message, Date: date}
@@ -81,35 +82,41 @@ func (repository *Repository) Checkout(branchName string) {
 	fmt.Printf("Branch %s not found\n", branchName)
 }
 
-// func (repository *Repository) Merge(branchName string) {
-// 	if repository.ActiveBranch.Name == branchName {
-// 		fmt.Printf("Cannot merge branch %s into itself\n", branchName)
-// 		return
-// 	}
+func (repository *Repository) Merge(branchName string) {
+	if repository.ActiveBranch.Name == branchName {
+		fmt.Printf("Cannot merge branch %s into itself\n", branchName)
+		return
+	}
 
-// 	for _, branch := range repository.Branches {
-// 		if branch.Name == branchName {
-// 			existingCommits := make(map[*Commit]bool)
-// 			for _, commit := range repository.ActiveBranch.Commits {
-// 				existingCommits[commit] = true
-// 			}
+	for _, branch := range repository.Branches {
+		if branch.Name == branchName {
+			existingCommits := make(map[*Commit]bool)
+			for _, commit := range repository.ActiveBranch.Commits {
+				existingCommits[commit] = true
+			}
 
-// 			for _, commit := range branch.Commits {
-// 				if !existingCommits[commit] {
-// 					repository.ActiveBranch.Commits = append(repository.ActiveBranch.Commits, commit)
-// 					existingCommits[commit] = true
-// 				}
-// 			}
+			for _, commit := range branch.Commits {
+				if !existingCommits[commit] {
+					repository.ActiveBranch.Commits = append(repository.ActiveBranch.Commits, commit)
+					reversedCommits, err := ReverseCommitsOrder(repository.ActiveBranch.Commits)
+					if err != nil {
+						fmt.Println("Error reversing commits order")
+						return
+					}
 
-// 			repository.ActiveBranch.LastCommit = branch.LastCommit
-// 			repository.Head = branch.LastCommit
-// 			fmt.Printf("Branch %s merged\n", branchName)
-// 			return
-// 		}
-// 	}
+					repository.ActiveBranch.Commits = reversedCommits
+					existingCommits[commit] = true
+				}
+			}
 
-// 	fmt.Printf("Branch %s not found\n", branchName)
-// }
+			repository.Head = GetLastCommit(repository.ActiveBranch)
+			fmt.Printf("Branch %s merged\n", branchName)
+			return
+		}
+	}
+
+	fmt.Printf("Branch %s not found\n", branchName)
+}
 
 // func (remoteRepository *RemoteRepository) CreateRemoteRepository(repositoryName string) {
 //     remoteRepository.Name = repositoryName

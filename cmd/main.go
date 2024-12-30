@@ -8,24 +8,16 @@ type Repository = git.Repository
 type RemoteRepository = git.RemoteRepository
 
 func main() {
-	// var repository = &Repository{}
-	// repository.Init("my-repo")
-	// repository.Commit("commit-1")
-	// repository.Commit("commit-2")
-	// repository.Log()
-	// var remoteRepository = &RemoteRepository{}
-	// remoteRepository.CreateRemoteRepository("my-remote-repo")
-	// remoteRepository.Debug()
-	// repository.RemoteAdd(remoteRepository)
-	// remoteRepository.Debug()
-	// repository.Push()
-	// remoteRepository.Debug()
-
 	repo := git.Init("my-repo")
 	repo.LogBranches()
 	repo.Commit("commit-1")
 	repo.LogCommits()
 	repo.Branch("branch-1")
 	repo.Checkout("branch-1")
-	println(repo.ActiveBranch.Name)
+	repo.Commit("commit-2")
+	repo.LogCommits()
+	repo.Checkout("main")
+	repo.LogCommits()
+	repo.Merge("branch-1")
+	repo.LogCommits()
 }

@@ -7,3 +7,7 @@ func ReverseCommitsOrder(commits []*Commit) ([]*Commit, error) {
     }
     return reversedCommits, nil
 }
+
+func GetLastCommit(branch *Branch) *Commit {
+    return branch.Commits[len(branch.Commits) - 1]
+}
