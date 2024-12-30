@@ -23,7 +23,6 @@ type Commit struct {
 type Branch struct {
 	Name string
 	Commits []*Commit
-	LastCommit *Commit
 }
 
 type repository interface {

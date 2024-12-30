@@ -24,11 +24,13 @@ func main() {
 	repo := git.Init("my-repo")
 	println(repo.Name)
 	println(repo.ActiveBranch.Name)
-	
-	for _, branch := range repo.Branches {
-		println(branch.Name)
-		for _, commit := range branch.Commits {
-			println(commit.Id)
-		}
-	}
+
+	repo.Branch()
+	repo.Commit("commit-1")
+
+	repo.Log()
+
+	repo.Commit("commit-2")
+
+	repo.Log()
 }
