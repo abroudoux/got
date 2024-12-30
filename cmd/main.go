@@ -22,15 +22,10 @@ func main() {
 	// remoteRepository.Debug()
 
 	repo := git.Init("my-repo")
-	println(repo.Name)
-	println(repo.ActiveBranch.Name)
-
-	repo.Branch()
+	repo.LogBranches()
 	repo.Commit("commit-1")
-
-	repo.Log()
-
-	repo.Commit("commit-2")
-
-	repo.Log()
+	repo.LogCommits()
+	repo.Branch("branch-1")
+	repo.Checkout("branch-1")
+	println(repo.ActiveBranch.Name)
 }

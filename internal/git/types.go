@@ -28,7 +28,7 @@ type Branch struct {
 type repository interface {
 	Init(repositoryName string)
 	Commit(message string)
-	Log()
+	LogCommits()
 	Branch(branchName string)
 	Checkout(branchName string)
 	Merge(branchName string)

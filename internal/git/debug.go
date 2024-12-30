@@ -45,7 +45,7 @@ func (repository *Repository) Debug() {
 	println("REPOSITORY DEBUG")
 	println("----------------")
 	println("COMMITS")
-	repository.Log()
+	repository.LogCommits()
 	println("BRANCHES")
 	repository.printBranches()
 	println("ACTIVE BRANCH")

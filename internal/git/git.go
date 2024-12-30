@@ -19,7 +19,7 @@ func Init(repositoryName string) *Repository {
 	return newRepository
 }
 
-func (repository *Repository) Branch() {
+func (repository *Repository) LogBranches() {
 	if len(repository.Branches) == 0 {
 		fmt.Println("No branches yet")
 		return
@@ -47,7 +47,7 @@ func (repository *Repository) Commit(message string) {
 	fmt.Printf("Commit: %s: %s -- %s \n", id, message, date)
 }
 
-func (repository *Repository) Log() {
+func (repository *Repository) LogCommits() {
 	if len(repository.ActiveBranch.Commits) == 0 {
 		fmt.Println("No commits yet")
 		return
@@ -58,29 +58,28 @@ func (repository *Repository) Log() {
 	}
 }
 
-// func (repository *Repository) Branch(branchName string) {
-// 	branch := &Branch{
-// 		Name:       branchName,
-// 		Commits:    append([]*Commit{}, repository.ActiveBranch.Commits...),
-// 		LastCommit: repository.Head,
-// 	}
-// 	repository.Branches = append(repository.Branches, branch)
+func (repository *Repository) Branch(branchName string) {
+	branch := &Branch{
+		Name:       branchName,
+		Commits:    append([]*Commit{}, repository.ActiveBranch.Commits...),
+	}
+	repository.Branches = append(repository.Branches, branch)
 
-// 	fmt.Printf("Branch %s created at commit %s\n", branch.Name, branch.LastCommit.Id)
-// }
+	fmt.Printf("Branch %s created at commit %s\n", branch.Name, repository.Head.Id)
+}
 
-// func (repository *Repository) Checkout(branchName string) {
-// 	for _, branch := range repository.Branches {
-// 		if branch.Name == branchName {
-// 			repository.ActiveBranch = branch
-// 			repository.Head = branch.LastCommit
-// 			fmt.Printf("Switched to branch %s\n", branchName)
-// 			return
-// 		}
-// 	}
+func (repository *Repository) Checkout(branchName string) {
+	for _, branch := range repository.Branches {
+		if branch.Name == branchName {
+			repository.ActiveBranch = branch
+			repository.Head = branch.Commits[len(branch.Commits) - 1]
+			fmt.Printf("Switched to branch %s\n", branchName)
+			return
+		}
+	}
 
-// 	fmt.Printf("Branch %s not found\n", branchName)
-// }
+	fmt.Printf("Branch %s not found\n", branchName)
+}
 
 // func (repository *Repository) Merge(branchName string) {
 // 	if repository.ActiveBranch.Name == branchName {
