@@ -7,12 +7,22 @@ import (
 	"github.com/google/uuid"
 )
 
-func (repository *Repository) Init(repositoryName string) {
-	repository.Name = repositoryName
+func Init(repositoryName string) *Repository {
+	// repository.Name = repositoryName
+	// mainBranch := &Branch{Name: "main", Commits: []*Commit{}, LastCommit: nil}
+	// repository.Branches = append(repository.Branches, mainBranch)
+	// repository.ActiveBranch = mainBranch
+	// repository.Head = repository.ActiveBranch.LastCommit
+
 	mainBranch := &Branch{Name: "main", Commits: []*Commit{}, LastCommit: nil}
-	repository.Branches = append(repository.Branches, mainBranch)
-	repository.ActiveBranch = mainBranch
-	repository.Head = repository.ActiveBranch.LastCommit
+	newRepository := &Repository{
+		Name:        repositoryName,
+		Branches:    []*Branch{mainBranch},
+		ActiveBranch: mainBranch,
+		Head:        nil,
+	}
+
+	return newRepository
 }
 
 func (repository *Repository) Commit(message string) {
