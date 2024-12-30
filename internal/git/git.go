@@ -73,7 +73,7 @@ func (repository *Repository) Checkout(branchName string) {
 	for _, branch := range repository.Branches {
 		if branch.Name == branchName {
 			repository.ActiveBranch = branch
-			repository.Head = branch.Commits[len(branch.Commits) - 1]
+			repository.Head = GetLastCommit(repository.ActiveBranch)
 			fmt.Printf("Switched to branch %s\n", branchName)
 			return
 		}
@@ -118,17 +118,22 @@ func (repository *Repository) Merge(branchName string) {
 	fmt.Printf("Branch %s not found\n", branchName)
 }
 
-// func (remoteRepository *RemoteRepository) CreateRemoteRepository(repositoryName string) {
-//     remoteRepository.Name = repositoryName
-//     remoteRepository.Url = fmt.Sprintf("https://gothub.com/%s", remoteRepository.Name)
-// 	remoteRepository.Repository = &Repository{}
+func InitRemoteRepository(repositoryName string) *RemoteRepository {
+    remoteRepository := &RemoteRepository{
+		Name: repositoryName,
+		Url: fmt.Sprintf("https://gothub.com/%s", repositoryName),
+		Repository: &Repository{},
+	}
 
-//     fmt.Printf("Remote repository %s created at %s\n", remoteRepository.Name, remoteRepository.Url)
-// }
-// func (repository *Repository) RemoteAdd(remoteRepository *RemoteRepository) {
-//     repository.Origin = remoteRepository
-//     fmt.Printf("Remote %s added\n", remoteRepository.Url)
-// }
+    fmt.Printf("Remote repository %s created at %s\n", remoteRepository.Name, remoteRepository.Url)
+
+	return remoteRepository
+}
+
+func (repository *Repository) RemoteAdd(remoteRepository *RemoteRepository) {
+    repository.Origin = remoteRepository
+    fmt.Printf("Remote %s added\n", remoteRepository.Url)
+}
 
 // func (repository *Repository) Push() {
 //     if repository.Origin == nil {
