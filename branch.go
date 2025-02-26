@@ -30,3 +30,17 @@ func (r *LocalRepository) LogBranches() {
 	}
 	return
 }
+
+func (r *RemoteRepository) LogBranches() {
+	if r.Repository == nil || len(r.Repository.Branches) == 0 {
+		log.Info(fmt.Sprintf("No branches in remote repository %s", r.Name))
+		return
+	}
+
+	log.Info(fmt.Sprintf("Branches remote repository %s: ", r.Name))
+	for _, branch := range r.Repository.Branches {
+		log.Info(fmt.Sprintf("  %s", branch.Name))
+	}
+
+	return
+}
