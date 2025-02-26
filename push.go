@@ -12,13 +12,20 @@ func (r *LocalRepository) Push(remoteBranchName string) {
 		return
 	}
 
-	log.Warn("Need to implement the push action.")
-	log.Info("Pushed to remote")
+	remote := r.Origin
+
+	if remote.IsRemoteRepositoryEmpty() {
+		remote.DefaultBranch = r.ActiveBranch
+		remote.DefaultBranch.Name = remoteBranchName
+		return
+	}
+
+	remote.Log()
+
+	log.Info(fmt.Sprintf("Pushed successfully on %s!", RenderEl(remote.Url)))
 	return
 }
 
-func (r *RemoteRepository) CreateDefaultBranchIfNotExists() {
-	if r.DefaultBranch.Name != "" {
-		return
-	}
+func (r *RemoteRepository) IsRemoteRepositoryEmpty() bool {
+	return r.DefaultBranch.Name == "" || len(r.Repository.Branches) == 0
 }

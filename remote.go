@@ -19,12 +19,12 @@ func CreateRemoteRepository(remoteRepositoryName string) *RemoteRepository {
 		Repository:    &Repository{},
 	}
 
-	log.Info(fmt.Sprintf("Remote repository %s created at %s", remoteRepository.Name, remoteRepository.Url))
+	log.Info(fmt.Sprintf("Remote repository %s created at %s", RenderEl(remoteRepository.Name), RenderEl(remoteRepository.Url)))
 	return remoteRepository
 }
 
 func (r *LocalRepository) RemoteAdd(remoteRepository *RemoteRepository) {
 	r.Origin = remoteRepository
-	log.Info(fmt.Sprintf("Remote %s added", remoteRepository.Url))
+	log.Info(fmt.Sprintf("Remote %s added", RenderEl(remoteRepository.Url)))
 	return
 }
