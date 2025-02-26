@@ -17,9 +17,9 @@ func CreateRemoteRepository(remoteRepositoryName string) *RemoteRepository {
 	return remoteRepository
 }
 
-func (r *Repository) RemoteAdd(remoteRepository *RemoteRepository) {
-	r.Origin = remoteRepository.Url
-	log.Info(fmt.Sprintf("Remote %s added", remoteRepository.Url))
+func (r *Repository) RemoteAdd(remoteRepositoryUrl string) {
+	r.Origin = remoteRepositoryUrl
+	log.Info(fmt.Sprintf("Remote %s added", remoteRepositoryUrl))
 }
 
 func (r *RemoteRepository) LogBranches() {
