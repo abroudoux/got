@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"slices"
+
+	"github.com/charmbracelet/log"
 )
 
 func (r *Repository) Branch(branchName string) {
@@ -13,5 +15,5 @@ func (r *Repository) Branch(branchName string) {
 	}
 	r.Branches = append(r.Branches, branch)
 
-	fmt.Printf("Branch %s created at commit %s\n", branch.Name, branch.LastCommit.Id)
+	log.Info(fmt.Sprintf("Branch %s created at commit %s", branch.Name, branch.LastCommit.Id))
 }

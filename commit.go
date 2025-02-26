@@ -4,10 +4,14 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/charmbracelet/log"
 	"github.com/google/uuid"
 )
 
 func (repository *Repository) Commit(message string) {
+	duration := time.Duration(1) * time.Second
+	time.Sleep(duration)
+
 	id := uuid.New().String()
 	date := time.Now().Format("2006-01-02 15:04:05")
 	newCommit := &Commit{Id: id, Message: message, Date: date}
@@ -15,7 +19,7 @@ func (repository *Repository) Commit(message string) {
 
 	reversedCommits, err := ReverseCommitsOrder(repository.ActiveBranch.Commits)
 	if err != nil {
-		fmt.Println("Error reversing commits order")
+		log.Error(fmt.Sprintf("Error reversing commits order: %v", err))
 		return
 	}
 
@@ -23,5 +27,5 @@ func (repository *Repository) Commit(message string) {
 	repository.ActiveBranch.LastCommit = newCommit
 	repository.Head = repository.ActiveBranch.LastCommit
 
-	fmt.Printf("Commit %s created at %s\n", id, date)
+	log.Info(fmt.Sprintf("Commit %s created at %s", id, date))
 }

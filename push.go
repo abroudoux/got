@@ -1,12 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/charmbracelet/log"
+)
 
 func (repository *Repository) Push() {
 	if repository.Origin == nil {
-		fmt.Println("No remote repository to push to.")
+		log.Error(fmt.Println("No remote repository to push to."))
 		return
 	}
 
-	println("Pushed to remote")
+	log.Info("Pushed to remote")
 }

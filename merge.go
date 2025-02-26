@@ -1,10 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/charmbracelet/log"
+)
 
 func (repository *Repository) Merge(branchName string) {
 	if repository.ActiveBranch.Name == branchName {
-		fmt.Printf("Cannot merge branch %s into itself\n", branchName)
+		log.Error(fmt.Sprintf("Cannot merge branch %s into itself", branchName))
 		return
 	}
 
@@ -15,19 +19,22 @@ func (repository *Repository) Merge(branchName string) {
 				existingCommits[commit] = true
 			}
 
+			newCommits := []*Commit{}
 			for _, commit := range branch.Commits {
 				if !existingCommits[commit] {
-					repository.ActiveBranch.Commits = append(repository.ActiveBranch.Commits, commit)
+					newCommits = append(newCommits, commit)
 					existingCommits[commit] = true
 				}
 			}
 
+			repository.ActiveBranch.Commits = append(newCommits, repository.ActiveBranch.Commits...)
 			repository.ActiveBranch.LastCommit = branch.LastCommit
 			repository.Head = branch.LastCommit
-			fmt.Printf("Branch %s merged\n", branchName)
+
+			log.Info(fmt.Sprintf("Branch %s merged", branchName))
 			return
 		}
 	}
 
-	fmt.Printf("Branch %s not found\n", branchName)
+	log.Warn(fmt.Sprintf("Branch %s not found", branchName))
 }

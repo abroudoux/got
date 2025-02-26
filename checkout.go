@@ -1,16 +1,21 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/charmbracelet/log"
+)
 
 func (r *Repository) Checkout(branchName string) {
 	for _, branch := range r.Branches {
 		if branch.Name == branchName {
 			r.ActiveBranch = branch
 			r.Head = branch.LastCommit
-			fmt.Printf("Switched to branch %s\n", branchName)
+
+			log.Info(fmt.Sprintf("Switched to branch %s", branchName))
 			return
 		}
 	}
 
-	fmt.Printf("Branch %s not found\n", branchName)
+	log.Warn(fmt.Sprintf("Branch %s not found", branchName))
 }
