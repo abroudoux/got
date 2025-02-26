@@ -11,6 +11,7 @@ func CreateRemoteRepository(remoteRepositoryName string) *RemoteRepository {
 
 	remoteRepository.Name = remoteRepositoryName
 	remoteRepository.Url = fmt.Sprintf("https://gothub.com/%s", remoteRepository.Name)
+	remoteRepository.DefaultBranch = &Branch{}
 	remoteRepository.Repository = &Repository{}
 
 	log.Info(fmt.Sprintf("Remote repository %s created at %s", remoteRepository.Name, remoteRepository.Url))
