@@ -7,12 +7,17 @@ import (
 )
 
 func CreateRemoteRepository(remoteRepositoryName string) *RemoteRepository {
-	var remoteRepository = &RemoteRepository{}
+	if remoteRepositoryName == "" {
+		log.Error("Remote repository name is empty.")
+		return nil
+	}
 
-	remoteRepository.Name = remoteRepositoryName
-	remoteRepository.Url = fmt.Sprintf("https://gothub.com/%s", remoteRepository.Name)
-	remoteRepository.DefaultBranch = &Branch{}
-	remoteRepository.Repository = &Repository{}
+	var remoteRepository = &RemoteRepository{
+		Name:          remoteRepositoryName,
+		Url:           fmt.Sprintf("https://gothub.com/%s", remoteRepositoryName),
+		DefaultBranch: &Branch{},
+		Repository:    &Repository{},
+	}
 
 	log.Info(fmt.Sprintf("Remote repository %s created at %s", remoteRepository.Name, remoteRepository.Url))
 	return remoteRepository
@@ -23,17 +28,3 @@ func (r *LocalRepository) RemoteAdd(remoteRepository *RemoteRepository) {
 	log.Info(fmt.Sprintf("Remote %s added", remoteRepository.Url))
 	return
 }
-
-// func (r *RemoteRepository) LogCommits() {
-// 	if r.Repository == nil {
-// 		log.Info(fmt.Sprintf("No commits in remote repository %s", r.Name))
-// 		return
-// 	}
-
-// 	log.Info(fmt.Sprintf("Commits remote repository %s: ", r.Name))
-// 	for _, commit := range r.Repository.ActiveBranch.Commits {
-// 		log.Info(fmt.Sprintf("  %s", commit.Message))
-// 	}
-
-// 	return
-// }

@@ -8,6 +8,11 @@ import (
 )
 
 func (r *LocalRepository) Commit(message string) {
+	if len(message) == 0 {
+		log.Error("Commit message is empty.")
+		return
+	}
+
 	duration := time.Duration(1) * time.Second
 	time.Sleep(duration)
 
