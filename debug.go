@@ -1,4 +1,4 @@
-package git
+package main
 
 import (
 	"fmt"
@@ -15,11 +15,11 @@ func (repository *Repository) printBranches() {
 }
 
 func (repository *Repository) printHead() {
-    if repository.Head == nil {
-        fmt.Println("No commits yet")
-    } else {
-        fmt.Printf("%s (%s)\n", repository.Head.Message, repository.Head.Date)
-    }
+	if repository.Head == nil {
+		fmt.Println("No commits yet")
+	} else {
+		fmt.Printf("%s (%s)\n", repository.Head.Message, repository.Head.Date)
+	}
 }
 
 func (repository *Repository) printActiveBranch() {
@@ -61,7 +61,7 @@ func (remoteRepository *RemoteRepository) printName() {
 }
 
 func (remoteRepository *RemoteRepository) printCommits() {
-	if (remoteRepository.Repository.ActiveBranch == nil) {
+	if remoteRepository.Repository.ActiveBranch == nil {
 		fmt.Println("No commits yet")
 		return
 	}
@@ -72,7 +72,7 @@ func (remoteRepository *RemoteRepository) printCommits() {
 }
 
 func (remoteRepository *RemoteRepository) printBranches() {
-	if (remoteRepository.Repository.Branches == nil) {
+	if remoteRepository.Repository.Branches == nil {
 		fmt.Println("No branches yet")
 		return
 	}

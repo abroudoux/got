@@ -1,28 +1,28 @@
-package git
+package main
 
 type Repository struct {
-	Name string
-	Head *Commit
-	Branches []*Branch
+	Name         string
+	Head         *Commit
+	Branches     []*Branch
 	ActiveBranch *Branch
-	Origin *RemoteRepository
+	Origin       *RemoteRepository
 }
 
 type RemoteRepository struct {
-	Name string
-	Url string
+	Name       string
+	Url        string
 	Repository *Repository
 }
 
 type Commit struct {
-	Id string
+	Id      string
 	Message string
-	Date string
+	Date    string
 }
 
 type Branch struct {
-	Name string
-	Commits []*Commit
+	Name       string
+	Commits    []*Commit
 	LastCommit *Commit
 }
 
