@@ -13,6 +13,6 @@ func (repository *Repository) Log() {
 	}
 
 	for _, commit := range repository.ActiveBranch.Commits {
-		log.Debug(fmt.Printf("%s: %s -- %s \n", commit.Id, commit.Message, commit.Date))
+		log.Debug(fmt.Sprintf("%s: %s -- %s \n", commit.Id, commit.Message, commit.Date))
 	}
 }

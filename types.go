@@ -5,7 +5,7 @@ type Repository struct {
 	Head         *Commit
 	Branches     []*Branch
 	ActiveBranch *Branch
-	Origin       *RemoteRepository
+	Origin       string
 }
 
 type RemoteRepository struct {
@@ -24,18 +24,4 @@ type Branch struct {
 	Name       string
 	Commits    []*Commit
 	LastCommit *Commit
-}
-
-type repository interface {
-	Init(repositoryName string)
-	Commit(message string)
-	Log()
-	Branch(branchName string)
-	Checkout(branchName string)
-	Merge(branchName string)
-	RemoteAdd(remoteRepository *RemoteRepository)
-}
-
-type remoteRepository interface {
-	CreateRemoteRepository(repositoryName string)
 }
