@@ -9,9 +9,10 @@ type Repository struct {
 }
 
 type RemoteRepository struct {
-	Name       string
-	Url        string
-	Repository *Repository
+	Name          string
+	Url           string
+	DefaultBranch *Branch
+	Repository    *Repository
 }
 
 type Commit struct {
