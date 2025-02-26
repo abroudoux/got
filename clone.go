@@ -1,11 +1,17 @@
 package main
 
-func Clone(remoteRepository *RemoteRepository) *LocalRepository {
-	return &LocalRepository{
-		Name:         remoteRepository.Name,
-		Head:         remoteRepository.DefaultBranch.Commits[0],
-		Origin:       remoteRepository,
-		ActiveBranch: remoteRepository.DefaultBranch,
-		Repository:   remoteRepository.Repository,
+import "github.com/charmbracelet/log"
+
+func (r *RemoteRepository) Clone() *LocalRepository {
+	var localRepository = &LocalRepository{
+		Name:       r.Name,
+		Repository: r.Repository,
+		Origin:     r,
 	}
+
+	if r.DefaultBranch == nil {
+		log.Warn("You're trying to clone an empty repository.")
+	}
+
+	return localRepository
 }
