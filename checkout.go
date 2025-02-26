@@ -6,16 +6,17 @@ import (
 	"github.com/charmbracelet/log"
 )
 
-func (r *Repository) Checkout(branchName string) {
-	for _, branch := range r.Branches {
+func (r *LocalRepository) Checkout(branchName string) {
+	for _, branch := range r.Repository.Branches {
 		if branch.Name == branchName {
 			r.ActiveBranch = branch
-			r.Head = branch.LastCommit
+			r.Head = branch.Commits[0]
 
-			log.Info(fmt.Sprintf("Switched to branch %s", branchName))
+			log.Info(fmt.Sprintf("Switched to branch %s", RenderEl(branchName)))
 			return
 		}
 	}
 
-	log.Warn(fmt.Sprintf("Branch %s not found", branchName))
+	log.Warn(fmt.Sprintf("Branch %s not found", RenderEl(branchName)))
+	return
 }

@@ -7,14 +7,21 @@ import (
 )
 
 func Init(repositoryName string) *LocalRepository {
+	var repository = &Repository{}
 	var localRepository = &LocalRepository{}
 
-	localRepository.Repository.Name = repositoryName
-	mainBranch := &Branch{Name: "main", Commits: []*Commit{}, LastCommit: nil}
+	localRepository.Name = repositoryName
+	mainBranch := &Branch{Name: "main", Commits: []*Commit{}}
+	localRepository.Repository = repository
 	localRepository.Repository.Branches = append(localRepository.Repository.Branches, mainBranch)
 	localRepository.ActiveBranch = mainBranch
-	localRepository.Head = localRepository.ActiveBranch.LastCommit
+	localRepository.Head = nil
 
-	log.Info(fmt.Sprintf("Repository %s initialized.", repositoryName))
+	log.Info(fmt.Sprintf("Repository %s initialized.", RenderEl(repositoryName)))
 	return localRepository
+}
+
+func (r *LocalRepository) LogName() {
+	log.Info("Repository name:")
+	log.Info(fmt.Sprintf("  %s", RenderEl(r.Name)))
 }

@@ -6,16 +6,16 @@ import (
 	"github.com/charmbracelet/log"
 )
 
-func (repository *Repository) Merge(branchName string) {
-	if repository.ActiveBranch.Name == branchName {
-		log.Error(fmt.Sprintf("Cannot merge branch %s into itself", branchName))
+func (r *LocalRepository) Merge(branchName string) {
+	if r.ActiveBranch.Name == branchName {
+		log.Error(fmt.Sprintf("Cannot merge branch %s into itself", RenderEl(branchName)))
 		return
 	}
 
-	for _, branch := range repository.Branches {
+	for _, branch := range r.Repository.Branches {
 		if branch.Name == branchName {
 			existingCommits := make(map[*Commit]bool)
-			for _, commit := range repository.ActiveBranch.Commits {
+			for _, commit := range r.ActiveBranch.Commits {
 				existingCommits[commit] = true
 			}
 
@@ -27,14 +27,14 @@ func (repository *Repository) Merge(branchName string) {
 				}
 			}
 
-			repository.ActiveBranch.Commits = append(newCommits, repository.ActiveBranch.Commits...)
-			repository.ActiveBranch.LastCommit = branch.LastCommit
-			repository.Head = branch.LastCommit
+			r.ActiveBranch.Commits = append(newCommits, r.ActiveBranch.Commits...)
+			r.Head = branch.Commits[0]
 
-			log.Info(fmt.Sprintf("Branch %s merged", branchName))
+			log.Info(fmt.Sprintf("Branch %s merged", RenderEl(branchName)))
 			return
 		}
 	}
 
-	log.Warn(fmt.Sprintf("Branch %s not found", branchName))
+	log.Warn(fmt.Sprintf("Branch %s not found", RenderEl(branchName)))
+	return
 }
