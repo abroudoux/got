@@ -6,13 +6,16 @@ import (
 	"github.com/charmbracelet/log"
 )
 
-func (repository *LocalRepository) Log() {
-	if len(repository.ActiveBranch.Commits) == 0 {
-		log.Warn("No commits yet")
+func (r *LocalRepository) Log() {
+	if len(r.ActiveBranch.Commits) == 0 {
+		log.Info("No commits yet.")
 		return
 	}
 
-	for _, commit := range repository.ActiveBranch.Commits {
-		log.Debug(fmt.Sprintf("%s: %s\n", commit.Date, commit.Message))
+	log.Info("Commits:")
+	for _, commit := range r.ActiveBranch.Commits {
+		log.Info(fmt.Sprintf("	%s: %s", RenderEl(commit.Date), RenderEl(commit.Message)))
 	}
+
+	return
 }

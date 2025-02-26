@@ -1,13 +1,17 @@
 package main
 
 func main() {
-	projectName := "my-project"
-	// newBranchName := "new-branch"
+	projectName := "got"
+	newBranchName := "new-branch"
 
 	repository := Init(projectName)
-	repository.LogBranches()
 	repository.Commit("commit-1")
-	repository.LogCommits()
+	repository.Checkout(newBranchName, true)
+	repository.Commit("commit-2")
+	repository.Checkout("main", false)
+	repository.Log()
+	repository.Merge(newBranchName)
+	repository.Log()
 
 	// repository.RemoteAdd(remoteRepository)
 	// repository.Push(repository.ActiveBranch.Name)
