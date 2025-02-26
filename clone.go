@@ -11,6 +11,9 @@ func (r *RemoteRepository) Clone() *LocalRepository {
 
 	if r.DefaultBranch == nil {
 		log.Warn("You're trying to clone an empty repository.")
+	} else {
+		localRepository.Head = r.DefaultBranch.Commits[0]
+		localRepository.ActiveBranch = r.DefaultBranch
 	}
 
 	return localRepository
