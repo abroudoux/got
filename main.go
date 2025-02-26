@@ -2,9 +2,13 @@ package main
 
 func main() {
 	projectName := "my-project"
+	// newBranchName := "new-branch"
+
 	repository := Init(projectName)
+	repository.LogBranches()
 	repository.Commit("commit-1")
-	remoteRepository := CreateRemoteRepository(projectName)
-	repository.RemoteAdd(remoteRepository.Url)
-	repository.Push(repository.ActiveBranch.Name)
+	repository.LogCommits()
+
+	// repository.RemoteAdd(remoteRepository)
+	// repository.Push(repository.ActiveBranch.Name)
 }

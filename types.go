@@ -1,11 +1,15 @@
 package main
 
 type Repository struct {
+	Branches []*Branch
+}
+
+type LocalRepository struct {
 	Name         string
 	Head         *Commit
-	Branches     []*Branch
+	Origin       *RemoteRepository
 	ActiveBranch *Branch
-	Origin       string
+	Repository   *Repository
 }
 
 type RemoteRepository struct {
@@ -16,13 +20,11 @@ type RemoteRepository struct {
 }
 
 type Commit struct {
-	Id      string
 	Message string
 	Date    string
 }
 
 type Branch struct {
-	Name       string
-	Commits    []*Commit
-	LastCommit *Commit
+	Name    string
+	Commits []*Commit
 }

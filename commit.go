@@ -5,16 +5,14 @@ import (
 	"time"
 
 	"github.com/charmbracelet/log"
-	"github.com/google/uuid"
 )
 
-func (r *Repository) Commit(message string) {
+func (r *LocalRepository) Commit(message string) {
 	duration := time.Duration(1) * time.Second
 	time.Sleep(duration)
 
-	id := uuid.New().String()
 	date := time.Now().Format("2006-01-02 15:04:05")
-	newCommit := &Commit{Id: id, Message: message, Date: date}
+	newCommit := &Commit{Message: message, Date: date}
 	r.ActiveBranch.Commits = append(r.ActiveBranch.Commits, newCommit)
 
 	reversedCommits, err := ReverseCommitsOrder(r.ActiveBranch.Commits)
@@ -24,13 +22,13 @@ func (r *Repository) Commit(message string) {
 	}
 
 	r.ActiveBranch.Commits = reversedCommits
-	r.ActiveBranch.LastCommit = newCommit
-	r.Head = r.ActiveBranch.LastCommit
+	r.Head = r.ActiveBranch.Commits[0]
 
-	log.Info(fmt.Sprintf("Commit %s created at %s", id, date))
+	log.Info(fmt.Sprintf("Commit %s created at %s", RenderEl(message), RenderEl(date)))
+	return
 }
 
-func (r *Repository) LogCommits() {
+func (r *LocalRepository) LogCommits() {
 	if len(r.ActiveBranch.Commits) == 0 {
 		log.Info("No commits yet.")
 		return
@@ -38,6 +36,8 @@ func (r *Repository) LogCommits() {
 
 	log.Info("Commits:")
 	for _, commit := range r.ActiveBranch.Commits {
-		log.Info(fmt.Sprintf("Commit %s: %s", commit.Id, commit.Message))
+		log.Info(fmt.Sprintf("	%s: %s", RenderEl(commit.Date), RenderEl(commit.Message)))
 	}
+
+	return
 }
