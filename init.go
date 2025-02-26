@@ -6,15 +6,15 @@ import (
 	"github.com/charmbracelet/log"
 )
 
-func Init(repositoryName string) *Repository {
-	var repository = &Repository{}
+func Init(repositoryName string) *LocalRepository {
+	var localRepository = &LocalRepository{}
 
-	repository.Name = repositoryName
+	localRepository.Repository.Name = repositoryName
 	mainBranch := &Branch{Name: "main", Commits: []*Commit{}, LastCommit: nil}
-	repository.Branches = append(repository.Branches, mainBranch)
-	repository.ActiveBranch = mainBranch
-	repository.Head = repository.ActiveBranch.LastCommit
+	localRepository.Repository.Branches = append(localRepository.Repository.Branches, mainBranch)
+	localRepository.ActiveBranch = mainBranch
+	localRepository.Head = localRepository.ActiveBranch.LastCommit
 
 	log.Info(fmt.Sprintf("Repository %s initialized.", repositoryName))
-	return repository
+	return localRepository
 }
