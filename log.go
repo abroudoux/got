@@ -33,3 +33,17 @@ func (r *RemoteRepository) Log() {
 
 	return
 }
+
+func (r *RemoteRepository) LogRemoteRepository() {
+	log.Info(fmt.Sprintf("Remote repository %s:", RenderEl(r.Name)))
+	log.Info("Default branch:")
+	log.Info(fmt.Sprintf("	%s", RenderEl(r.DefaultBranch.Name)))
+
+	log.Info("Commits:")
+	for _, branch := range r.Repository.Branches {
+		log.Info(fmt.Sprintf("	%s:", RenderEl(branch.Name)))
+		for _, commit := range branch.Commits {
+			log.Info(fmt.Sprintf("		%s: %s", commit.Date, RenderEl(commit.Message)))
+		}
+	}
+}

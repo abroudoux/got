@@ -15,20 +15,39 @@ func (r *LocalRepository) Push(remoteBranchName string) {
 	remote := r.Origin
 
 	if remote.IsRemoteRepositoryEmpty() {
+		r.ActiveBranch.Name = remoteBranchName
 		remote.DefaultBranch = r.ActiveBranch
-		remote.DefaultBranch.Name = remoteBranchName
+		remote.Repository.Branches = []*Branch{r.ActiveBranch}
 	} else {
+		found := false
+
 		for _, branch := range remote.Repository.Branches {
 			if branch.Name == remoteBranchName {
-				// todo: I'll need to compare both
-				branch.Commits = append(branch.Commits, r.ActiveBranch.Commits...)
-				return
-			}
+				found = true
 
-			remote.Repository.Branches = append(remote.Repository.Branches, &Branch{
+				existingCommits := make(map[*Commit]bool)
+				for _, commit := range branch.Commits {
+					existingCommits[commit] = true
+				}
+
+				newCommits := []*Commit{}
+				for _, commit := range r.ActiveBranch.Commits {
+					if !existingCommits[commit] {
+						newCommits = append([]*Commit{commit}, newCommits...)
+					}
+				}
+
+				branch.Commits = append(newCommits, branch.Commits...)
+				break
+			}
+		}
+
+		if !found {
+			newBranch := &Branch{
 				Name:    remoteBranchName,
 				Commits: r.ActiveBranch.Commits,
-			})
+			}
+			remote.Repository.Branches = append(remote.Repository.Branches, newBranch)
 		}
 	}
 

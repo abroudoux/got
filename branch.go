@@ -41,6 +41,5 @@ func (r *RemoteRepository) LogBranches() {
 	for _, branch := range r.Repository.Branches {
 		log.Info(fmt.Sprintf("  %s", branch.Name))
 	}
-
 	return
 }
