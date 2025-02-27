@@ -17,10 +17,20 @@ func (r *LocalRepository) Push(remoteBranchName string) {
 	if remote.IsRemoteRepositoryEmpty() {
 		remote.DefaultBranch = r.ActiveBranch
 		remote.DefaultBranch.Name = remoteBranchName
-		return
-	}
+	} else {
+		for _, branch := range remote.Repository.Branches {
+			if branch.Name == remoteBranchName {
+				// todo: I'll need to compare both
+				branch.Commits = append(branch.Commits, r.ActiveBranch.Commits...)
+				return
+			}
 
-	remote.Log()
+			remote.Repository.Branches = append(remote.Repository.Branches, &Branch{
+				Name:    remoteBranchName,
+				Commits: r.ActiveBranch.Commits,
+			})
+		}
+	}
 
 	log.Info(fmt.Sprintf("Pushed successfully on %s!", RenderEl(remote.Url)))
 	return

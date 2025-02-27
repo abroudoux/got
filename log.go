@@ -14,7 +14,7 @@ func (r *LocalRepository) Log() {
 
 	log.Info("Commits:")
 	for _, commit := range r.ActiveBranch.Commits {
-		log.Info(fmt.Sprintf("	%s: %s", RenderEl(commit.Date), RenderEl(commit.Message)))
+		log.Info(fmt.Sprintf("	%s: %s", commit.Date, RenderEl(commit.Message)))
 	}
 
 	return
@@ -28,7 +28,7 @@ func (r *RemoteRepository) Log() {
 
 	log.Info("Commits:")
 	for _, commit := range r.DefaultBranch.Commits {
-		log.Info(fmt.Sprintf("	%s: %s", RenderEl(commit.Date), RenderEl(commit.Message)))
+		log.Info(fmt.Sprintf("	%s: %s", commit.Date, RenderEl(commit.Message)))
 	}
 
 	return

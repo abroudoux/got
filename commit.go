@@ -18,17 +18,9 @@ func (r *LocalRepository) Commit(message string) {
 
 	date := time.Now().Format("2006-01-02 15:04:05")
 	newCommit := &Commit{Message: message, Date: date}
-	r.ActiveBranch.Commits = append(r.ActiveBranch.Commits, newCommit)
-
-	reversedCommits, err := ReverseCommitsOrder(r.ActiveBranch.Commits)
-	if err != nil {
-		log.Error(fmt.Sprintf("Error reversing commits order: %v", err))
-		return
-	}
-
-	r.ActiveBranch.Commits = reversedCommits
+	r.ActiveBranch.Commits = append([]*Commit{newCommit}, r.ActiveBranch.Commits...)
 	r.Head = r.ActiveBranch.Commits[0]
 
-	log.Info(fmt.Sprintf("Commit %s created at %s", RenderEl(message), RenderEl(date)))
+	log.Info(fmt.Sprintf("Commit %s created at %s", RenderEl(message), date))
 	return
 }
